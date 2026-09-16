@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "luizgustavosaraiva.ai-memory",
+  "name": "AI Memory",
+  "version": "1.1.0",
+  "author": "Luiz Gustavo Saraiva",
+  "license": "MIT",
+  "description": "Desktop companion for the ai-memory wiki: open handoff, session stats, recent pages, and full-text search in a bar panel.",
+  "homepage": "https://github.com/akitaonrails/ai-memory",
+  "kinds": [
+    "bar-widget"
+  ],
+  "activation": "on-demand",
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "AI Memory",
+    "description": "One bar icon and one panel: pending handoff, wiki stats, recent pages, and FTS search against an ai-memory server's /api/v1.",
+    "category": "AI",
+    "aliases": [
+      "ai-memory",
+      "memory",
+      "wiki"
+    ],
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "serverUrl": "http://127.0.0.1:49374",
+      "token": "",
+      "pollIntervalSec": 30,
+      "preferredWorkspace": "default",
+      "preferredProject": ""
+    },
+    "schema": [
+      {
+        "key": "serverUrl",
+        "type": "string",
+        "label": "Server URL",
+        "defaultValue": "http://127.0.0.1:49374",
+        "description": "Base URL of the ai-memory server."
+      },
+      {
+        "key": "token",
+        "type": "string",
+        "label": "Bearer token",
+        "defaultValue": "",
+        "description": "Optional. AI_MEMORY_AUTH_TOKEN or an aim_ API key when the server has auth enabled."
+      },
+      {
+        "key": "pollIntervalSec",
+        "type": "integer",
+        "label": "Refresh interval (seconds)",
+        "min": 5,
+        "max": 600,
+        "step": 5,
+        "defaultValue": 30
+      },
+      {
+        "key": "preferredWorkspace",
+        "type": "string",
+        "label": "Workspace",
+        "defaultValue": "default"
+      },
+      {
+        "key": "preferredProject",
+        "type": "string",
+        "label": "Project",
+        "defaultValue": "",
+        "description": "Empty follows the most recently updated project."
+      }
+    ]
+  }
+}
