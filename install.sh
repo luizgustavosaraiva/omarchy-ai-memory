@@ -30,7 +30,7 @@ omarchy-shell shell rescanPlugins
 omarchy plugin enable "$ID"
 omarchy bar move "$ID" --section right
 
-echo "\u2713 $ID installed at ${REPO_REF:0:12} (right side of the bar)."
+echo "✓ $ID installed at ${REPO_REF:0:12} (right side of the bar)."
 if ! command -v ai-memory >/dev/null 2>&1; then
   echo "NOTE: no ai-memory server found. The widget will show as offline until one is running."
   echo "      On Arch:  omarchy pkg aur add ai-memory-bin"
