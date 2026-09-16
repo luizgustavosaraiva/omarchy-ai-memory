@@ -4,20 +4,26 @@ set -euo pipefail
 ID="luizgustavosaraiva.ai-memory"
 DEST="$HOME/.config/omarchy/plugins/$ID"
 REPO="https://github.com/luizgustavosaraiva/omarchy-ai-memory"
+# Security: the installed code is pinned to an exact commit. This constant is
+# updated at release time; the installer itself is fetched from an immutable
+# pinned raw URL (see the README one-liner), never from a mutable branch.
+REPO_REF="__PIN__"
 
 if [ -d "$DEST/.git" ]; then
-  echo "Updating $ID..."
-  git -C "$DEST" pull --ff-only
+  echo "Updating $ID to ${REPO_REF:0:12}..."
+  git -C "$DEST" fetch origin main
+  git -C "$DEST" checkout --quiet "$REPO_REF"
 else
-  echo "Installing $ID..."
-  git clone --depth 1 "$REPO" "$DEST"
+  echo "Installing $ID at ${REPO_REF:0:12}..."
+  git clone --quiet "$REPO" "$DEST"
+  git -C "$DEST" checkout --quiet "$REPO_REF"
 fi
 
 omarchy-shell shell rescanPlugins
 omarchy plugin enable "$ID"
 omarchy bar move "$ID" --section right
 
-echo "✓ $ID installed and placed on the right side of the bar."
+echo "\u2713 $ID installed at ${REPO_REF:0:12} (right side of the bar)."
 if ! command -v ai-memory >/dev/null 2>&1; then
   echo "NOTE: no ai-memory server found. The widget will show as offline until one is running."
   echo "      On Arch:  omarchy pkg aur add ai-memory-bin"

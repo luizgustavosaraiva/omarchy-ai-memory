@@ -651,7 +651,13 @@ Panel {
             font.family: root.fontFamily
             font.pixelSize: Style.font.bodySmall
             wrapMode: Text.WordWrap
-            onLinkActivated: function(link) { Qt.openUrlExternally(link) }
+            // Security (marketplace baseline): page bodies are server-controlled.
+            // Only http/https links may leave the panel — never file:, exec:,
+            // javascript: or any other scheme embedded in wiki markdown.
+            onLinkActivated: function(link) {
+              var scheme = String(link).split(":")[0].toLowerCase()
+              if (scheme === "http" || scheme === "https") Qt.openUrlExternally(link)
+            }
           }
         }
       }

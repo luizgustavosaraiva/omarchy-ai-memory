@@ -102,37 +102,72 @@ Item {
   }
 
   // ------------------------------------------------------------ http
+  // Security bounds (marketplace baseline): every request has a hard deadline
+  // (the XHR is aborted) and responses larger than maxResponseBytes are
+  // rejected before parsing — a bad server cannot hang the shell or balloon
+  // memory with an unbounded body.
+  readonly property int requestTimeoutMs: 8000
+  readonly property int maxResponseBytes: 8 * 1024 * 1024
+  property int _reqSeq: 0
+  property var _pending: ({})
+
   function request(path, cb) {
     if (root.serverUrl === "") { cb("no server URL configured", null); return }
+    var seq = ++_reqSeq
     var xhr = new XMLHttpRequest()
     xhr.open("GET", root.serverUrl + path)
     if (root.token !== "") xhr.setRequestHeader("Authorization", "Bearer " + root.token)
     xhr.setRequestHeader("Accept", "application/json")
     var settled = false
+    function finish(err, data) {
+      if (settled) return
+      settled = true
+      delete root._pending[seq]
+      cb(err, data)
+    }
     xhr.onreadystatechange = function() {
       if (xhr.readyState !== XMLHttpRequest.DONE || settled) return
-      settled = true
       if (xhr.status >= 200 && xhr.status < 300) {
+        if (xhr.responseText.length > root.maxResponseBytes) {
+          finish("response exceeds size limit (" + root.maxResponseBytes + " bytes)", null)
+          return
+        }
         try {
-          cb(null, JSON.parse(xhr.responseText))
+          finish(null, JSON.parse(xhr.responseText))
         } catch (e) {
-          cb("invalid JSON response", null)
+          finish("invalid JSON response", null)
         }
       } else if (xhr.status === 0) {
-        cb("connection failed", null)
+        finish("connection failed", null)
       } else {
         var message = "HTTP " + xhr.status
         try {
           var body = JSON.parse(xhr.responseText)
           if (body && body.error) message = body.error
         } catch (e) {}
-        cb(message, null)
+        finish(message, null)
       }
     }
+    root._pending[seq] = { xhr: xhr, started: Date.now(), finish: finish }
     try {
       xhr.send()
     } catch (e) {
-      cb(String(e), null)
+      finish(String(e), null)
+    }
+  }
+
+  Timer {
+    interval: 500
+    running: true
+    repeat: true
+    onTriggered: {
+      var now = Date.now()
+      for (var seq in root._pending) {
+        var entry = root._pending[seq]
+        if (!entry || now - entry.started <= root.requestTimeoutMs) continue
+        try { entry.xhr.abort() } catch (e) {}
+        entry.finish("request timed out after " + root.requestTimeoutMs + " ms", null)
+      }
     }
   }
 
