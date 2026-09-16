@@ -12,7 +12,7 @@ no browser needed.
 ## Quick install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/luizgustavosaraiva/omarchy-ai-memory/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/luizgustavosaraiva/omarchy-ai-memory/02d1e249cf50a069e90a0d950427e18e77e08174/install.sh | bash
 ```
 
 ## Install
