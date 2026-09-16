@@ -11,7 +11,7 @@ REPO_REF="v1.1.2"
 
 if [ -d "$DEST/.git" ]; then
   echo "Updating $ID to ${REPO_REF:0:12}..."
-  git -C "$DEST" fetch origin main
+  git -C "$DEST" fetch --tags --force origin main
   git -C "$DEST" checkout --quiet "$REPO_REF"
 elif [ -d "$DEST" ]; then
   # Manual (non-git) install found: back it up, then install the pinned clone.
