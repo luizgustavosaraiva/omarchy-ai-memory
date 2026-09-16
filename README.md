@@ -11,9 +11,17 @@ no browser needed.
 
 ## Quick install
 
+Download, verify the published SHA-256, then run — no pipe-to-shell:
+
 ```bash
-curl -fsSL https://raw.githubusercontent.com/luizgustavosaraiva/omarchy-ai-memory/02d1e249cf50a069e90a0d950427e18e77e08174/install.sh | bash
+curl -fsSL -o /tmp/omarchy-ai-memory-install.sh   https://raw.githubusercontent.com/luizgustavosaraiva/omarchy-ai-memory/v1.1.2/install.sh
+echo "549a08d3a207f4e36a381d824447de7987ddda17bed46bb801d8cd154e2d9dc3  /tmp/omarchy-ai-memory-install.sh" | sha256sum -c -
+bash /tmp/omarchy-ai-memory-install.sh
 ```
+
+The digest above matches `checksums.txt` in this repository and the
+installer checks out the exact pinned release commit. To update, re-run
+these commands (they are refreshed at every release).
 
 ## Install
 

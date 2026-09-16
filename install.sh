@@ -7,11 +7,18 @@ REPO="https://github.com/luizgustavosaraiva/omarchy-ai-memory"
 # Security: the installed code is pinned to an exact commit. This constant is
 # updated at release time; the installer itself is fetched from an immutable
 # pinned raw URL (see the README one-liner), never from a mutable branch.
-REPO_REF="02d1e249cf50a069e90a0d950427e18e77e08174"
+REPO_REF="e7d2e91f2c5c42ba21c080e1e4475da6ea537896"
 
 if [ -d "$DEST/.git" ]; then
   echo "Updating $ID to ${REPO_REF:0:12}..."
   git -C "$DEST" fetch origin main
+  git -C "$DEST" checkout --quiet "$REPO_REF"
+elif [ -d "$DEST" ]; then
+  # Manual (non-git) install found: back it up, then install the pinned clone.
+  BACKUP="$DEST.bak.$(date +%s)"
+  echo "Backing up existing non-git install to $BACKUP"
+  mv "$DEST" "$BACKUP"
+  git clone --quiet "$REPO" "$DEST"
   git -C "$DEST" checkout --quiet "$REPO_REF"
 else
   echo "Installing $ID at ${REPO_REF:0:12}..."
