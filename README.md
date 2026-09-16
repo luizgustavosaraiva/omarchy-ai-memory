@@ -15,7 +15,7 @@ Download, verify the published SHA-256, then run — no pipe-to-shell:
 
 ```bash
 curl -fsSL -o /tmp/omarchy-ai-memory-install.sh   https://raw.githubusercontent.com/luizgustavosaraiva/omarchy-ai-memory/v1.1.2/install.sh
-echo "549a08d3a207f4e36a381d824447de7987ddda17bed46bb801d8cd154e2d9dc3  /tmp/omarchy-ai-memory-install.sh" | sha256sum -c -
+echo "6b941dd26087943f9eefcb2116a64a16eadffb72087b30d5ab0974c6329254a3  /tmp/omarchy-ai-memory-install.sh" | sha256sum -c -
 bash /tmp/omarchy-ai-memory-install.sh
 ```
 
