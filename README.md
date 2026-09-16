@@ -23,6 +23,11 @@ The digest above matches `checksums.txt` in this repository and the
 installer checks out the exact pinned release commit. To update, re-run
 these commands (they are refreshed at every release).
 
+If the checksum check fails right after a release, the raw-content CDN
+may still be serving the previous revision of the tag — wait a few
+minutes and retry. A mismatch after that window means the bytes differ
+from the reviewed snapshot: do not run the installer.
+
 ## Install
 
 ```bash
